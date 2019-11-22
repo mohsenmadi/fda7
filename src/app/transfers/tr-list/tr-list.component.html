@@ -1,0 +1,85 @@
+<button *ngIf="!showStyle" mat-icon-button (click)="showStyle = true">
+  <mat-icon>lightbulb_outline</mat-icon>
+</button>
+<button *ngIf="showStyle" mat-icon-button color="accent">
+  <mat-icon>lightbulb_outline</mat-icon>
+</button>
+
+<button *ngIf="!showHighlight" mat-icon-button (click)="showHighlight = true">
+  <mat-icon>lightbulb_outline</mat-icon>
+</button>
+<button *ngIf="showHighlight" mat-icon-button color="accent">
+  <mat-icon>lightbulb_outline</mat-icon>
+</button>
+
+<div fxLayoutAlign="center center">
+
+  <button mat-icon-button
+          *ngIf="showHighlight"
+          (click)="analyze()"
+          style="margin: 0px 5px 0px 0px"
+          color="accent">
+    <mat-icon>highlight</mat-icon>
+  </button>
+  <mat-progress-spinner
+    *ngIf="go4spin"
+    [value]="progress"
+    [diameter]="48"
+    style="padding-right: 10px"
+    mode="determinate">
+  </mat-progress-spinner>
+
+  <mat-form-field fxFlex="40%">
+    <input matInput value="{{ alert.acctno }}" type="text" (keyup)="doFilter($event.target.value)" placeholder="Filter">
+  </mat-form-field>
+
+  <button mat-icon-button
+          (click)="release()"
+          style="margin: 0px 5px 0px 5px"
+          color="primary">
+    <mat-icon>sentiment_satisfied</mat-icon>
+  </button>
+
+  <button mat-icon-button
+          (click)="hold()"
+          color="warn">
+    <mat-icon>sentiment_very_dissatisfied</mat-icon>
+  </button>
+
+</div>
+
+<mat-table [dataSource]="dataSource" matSort>
+
+  <ng-container matColumnDef="accno">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>accno</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.accno }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="time">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>time</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.time | date:'short' }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="amount">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>amount</mat-header-cell>
+    <mat-cell *matCellDef="let elm">
+      <span
+        [style.background]="elm.amount > 1090 && elm.amount < 1600 && showStyle ? '#a22' : 'none'"
+        [style.color]="elm.amount > 1090 && elm.amount < 1600 && showStyle ? '#ee0' : 'none'"
+        [style.padding]="elm.amount > 1090 && elm.amount < 1600 && showStyle ? '4px' : 'none'">
+        {{ elm.amount | number }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="beneficiary">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>beneficiary</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.beneficiary }}</mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+
+<mat-paginator [pageSize]="5" [pageSizeOptions]="[1, 5, 10, 20]">
+</mat-paginator>
